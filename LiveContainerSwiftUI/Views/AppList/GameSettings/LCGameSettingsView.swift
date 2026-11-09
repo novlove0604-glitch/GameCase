@@ -36,6 +36,7 @@ import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
 
+
 /// 裁剪页呈现载荷（fullScreenCover item）
 private struct LCCoverCropItem: Identifiable {
     let id = UUID()
@@ -308,7 +309,7 @@ struct LCGameSettingsView: View {
     @Environment(\.dismiss) private var dismiss
 
     @AppStorage("darkModeIcon", store: LCUtils.appGroupUserDefault) private var darkModeIcon = false
-
+    @State private var appSettingsPresented = false
     @State private var prefs: LCGamePrefs?
     @State private var settings: [LCLauncherSetting] = []
     @State private var hasProfile = false
@@ -1100,13 +1101,19 @@ struct LCGameSettingsView: View {
 
     private var advancedSection: some View {
         sectionCard(title: "高级") {
-            NavigationLink {
-                LCAppSettingsView(model: app)
+            Button {
+                appSettingsPresented = true
             } label: {
                 navRow(label: "容器与高级设置") {
                     Text("GameCase")
                         .font(.system(size: 14.5, weight: .semibold))
                         .foregroundColor(LCNXColor.cream)
+                }
+            }
+            .buttonStyle(.plain)
+            .sheet(isPresented: $appSettingsPresented) {
+                NavigationView {
+                    LCAppSettingsView(model: app)
                 }
             }
             nxDivider

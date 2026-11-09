@@ -367,8 +367,9 @@ enum LCGameMods {
         // 行，单装版 IPA 装进 GC 也直进游戏，不必再出专用包。逐游
         // 戏开关（LauncherGate，设置页「高级」组）：打开「显示游戏
         // 启动页」的那款改为删行，客体下次启动恢复自带启动页。
-        maintainEnvLine(envFile: envFile, key: "DM_LAUNCHER",
-                        value: LauncherGate.showsLauncher(forBundleIdentifier: bundleIdentifier) ? nil : "0")
+
+        // 解除 GC 的环境变量压制，让游戏内悬浮菜单默认完整显示（性能监控/震动/帧率/主机模式等）
+        maintainEnvLine(envFile: envFile, key: "DM_LAUNCHER", value: nil)
     }
 
     /// 启动漏斗入口：容器取 runApp 即将启动的那一个（与

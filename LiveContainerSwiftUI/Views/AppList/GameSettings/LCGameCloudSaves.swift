@@ -357,9 +357,11 @@ struct LCGameCloudSavesSectionView: View {
                 row(value: "lc.cloud.notPicked".loc, valueColor: .white.opacity(0.5))
             }
             .buttonStyle(.plain)
-        case .on(let folderName):
+                case .on(let folderName):
             Menu {
-                Button("lc.cloud.changeFolder".loc) { picking = true }
+                Button("lc.cloud.changeFolder".loc) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { picking = true }
+                }
                 Button("lc.cloud.turnOff".loc) {
                     LCGameCloudSaves.setOff(true, forBundleIdentifier: app.bundleIdentifier)
                     reload()
@@ -373,7 +375,9 @@ struct LCGameCloudSavesSectionView: View {
                     LCGameCloudSaves.setOff(false, forBundleIdentifier: app.bundleIdentifier)
                     reload()
                 }
-                Button("lc.cloud.changeFolder".loc) { picking = true }
+                Button("lc.cloud.changeFolder".loc) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { picking = true }
+                }
                 Button("lc.cloud.remove".loc, role: .destructive) {
                     LCGameCloudSaves.removeRecord(forBundleIdentifier: app.bundleIdentifier)
                     reload()
@@ -383,7 +387,9 @@ struct LCGameCloudSavesSectionView: View {
             }
         case .stale:
             Menu {
-                Button("lc.cloud.repick".loc) { picking = true }
+                Button("lc.cloud.repick".loc) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { picking = true }
+                }
                 Button("lc.cloud.remove".loc, role: .destructive) {
                     LCGameCloudSaves.removeRecord(forBundleIdentifier: app.bundleIdentifier)
                     reload()

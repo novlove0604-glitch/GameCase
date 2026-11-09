@@ -49,13 +49,33 @@ import Intents
     }
 }
 
-class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject { // Make SceneDelegate conform ObservableObject
-    var window: UIWindow?
+class SceneDelegate: NSObject, UIWindowSceneDelegate, ObservableObject {
+    var window: UIWindow? {
+        get {
+            if let activeWindow = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .filter({ $0.activationState == .foregroundActive || $0.activationState == .foregroundInactive })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow }) {
+                return activeWindow
+            }
+            return _cachedWindow
+        }
+        set {
+            _cachedWindow = newValue
+        }
+    }
+    private var _cachedWindow: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        self.window = (scene as? UIWindowScene)?.keyWindow
+        self._cachedWindow = (scene as? UIWindowScene)?.keyWindow ?? (scene as? UIWindowScene)?.windows.first
     }
     
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        if let windowScene = scene as? UIWindowScene {
+            self._cachedWindow = windowScene.keyWindow ?? windowScene.windows.first
+        }
+    }
 }
 
 

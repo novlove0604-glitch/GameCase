@@ -129,7 +129,12 @@ public struct DocModifier: ViewModifier {
                 // 必须挂在顶层 VC 上：呈现方（如容器设置页）本身是 sheet 时，
                 // rootViewController 已在呈现中，对它再调 present 会被系统
                 // 静默拒绝，表现为点了按钮毫无反应（导入证书即此症）
-                UIViewController.lcTopmost(from: sceneDelegate.window?.rootViewController)?.present(controller, animated: true)
+                let rootVC = sceneDelegate.window?.rootViewController ?? 
+                UIApplication.shared.connectedScenes
+                     .compactMap({ $0 as? UIWindowScene })
+                    .flatMap({ $0.windows })
+                    .first(where: { $0.isKeyWindow })?.rootViewController
+                UIViewController.lcTopmost(from: rootVC)?.present(controller, animated: true)
             } else if !isPresented, let docController = docController {
                 docController.dismiss(animated: true)
                 self.docController = nil
